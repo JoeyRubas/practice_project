@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from practice.models import Student, Issue, Candidate, CandidateIssue
+from practice.models import Student, Issue, Candidate, CandidateIssue, Vote
 
 
 
@@ -28,7 +28,14 @@ class CandidateIssueSerializer(serializers.ModelSerializer):
 
 class CandidateSerializer(serializers.ModelSerializer):
     candidate_issues = CandidateIssueSerializer(many=True)
+    vote_count = serializers.IntegerField()
     class Meta:
         model = Candidate
-        fields = ["first_name", "last_name", "grade", "candidate_issues"]
+        fields = ["first_name", "last_name", "grade", "candidate_issues", "vote_count"]
+
+class VoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vote
+        fields = ["candidate", "student"]
+
 

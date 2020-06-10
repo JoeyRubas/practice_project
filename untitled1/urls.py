@@ -22,8 +22,8 @@ from practice import views
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
-router.register(r'candidates', views.CandidateViewSet)
-router.register(r'student', views.StudentViewSet, basename="student")
+router.register(r'candidates', views.CandidateViewSet, basename="candidates")
+router.register(r'vote', views.VoteViewSet, basename="vote")
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [

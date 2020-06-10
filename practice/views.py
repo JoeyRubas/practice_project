@@ -8,15 +8,15 @@ from django.utils.functional import cached_property
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, viewsets, status, generics
+from rest_framework import filters, viewsets, status, generics, mixins
 from rest_framework.decorators import action
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ViewSet, ModelViewSet
+from rest_framework.viewsets import ViewSet, ModelViewSet, GenericViewSet
 
-from practice.models import Student, Issue, Candidate
-from practice.serializers import CandidateSerializer, StudentSerializer
+from practice.models import Student, Issue, Candidate, Vote
+from practice.serializers import CandidateSerializer, StudentSerializer, VoteSerializer
 
 """
 def student_list(request):
@@ -44,8 +44,8 @@ def candidate_list(request):
 """
 
 
-class CandidateViewSet(ModelViewSet):
-    queryset = Candidate.objects.all()
+class CandidateViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = Candidate.objects.all().with_vote_counts()
     serializer_class = CandidateSerializer
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
     search_fields = ["first_name", "last_name"]
@@ -53,7 +53,8 @@ class CandidateViewSet(ModelViewSet):
     filterset_fields = ['grade']
 
 
-class StudentViewSet(ModelViewSet):
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+class VoteViewSet(mixins.CreateModelMixin, GenericViewSet):
+    queryset = Vote.objects.all()
+    serializer_class = VoteSerializer
+
 
